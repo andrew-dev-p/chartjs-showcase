@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Chart.js, the Missing Manual</title>
+    <title>Waterfall chart</title>
     <style>
       * {
         margin: 0;
@@ -43,7 +43,6 @@
     ></script>
 
     <script>
-      // data block
       const data = {
         labels: [
           "Red",
@@ -58,7 +57,6 @@
         datasets: [
           {
             label: "# of Votes",
-            //data: [12, 19, 3, 5, 2, 3],
 
             data: [
               [12, 19],
@@ -78,7 +76,6 @@
         ],
       };
 
-      // waterfallLines plugin
       const waterfallLines = {
         id: "waterfall",
         beforeDraw(chart, args, options) {
@@ -106,7 +103,6 @@
         },
       };
 
-      // config block
       const config = {
         type: "bar",
         data: data,
@@ -138,12 +134,10 @@
         plugins: [waterfallLines, ChartDataLabels],
       };
 
-      // init render block
       const myChart = new Chart(document.getElementById("myChart"), config);
 
       function barColorCode() {
         return (ctx) => {
-          //console.log(ctx.chart.config.data.datasets[0].data.length)
           const start = ctx.parsed._custom.start;
           const end = ctx.parsed._custom.end;
           let barColor =
