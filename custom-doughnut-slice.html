@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Custom doughnut slice chart</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        font-family: sans-serif;
+      }
+      .chartCard {
+        width: 100vw;
+        height: calc(100vh - 40px);
+        background: rgba(75, 192, 192, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .chartBox {
+        width: 45%;
+        padding: 20px;
+        border-radius: 20px;
+        border: solid 3px rgba(75, 192, 192, 1);
+        background: white;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="chartCard">
+      <div class="chartBox">
+        <canvas id="myChart"></canvas>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.2.0/dist/chart.umd.min.js"></script>
+
+    <script>
+      const data = {
+        labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+        datasets: [
+          {
+            label: "# of Votes",
+            data: [12, 15, 3, 6, 9, 12],
+            backgroundColor: [
+              "rgba(255, 99, 132, 0.2)",
+              "rgba(54, 162, 235, 0.2)",
+              "rgba(255, 206, 86, 0.2)",
+              "rgba(75, 192, 192, 0.2)",
+              "rgba(153, 102, 255, 0.2)",
+              "rgba(255, 159, 64, 0.2)",
+            ],
+            borderColor: [
+              "rgba(255, 99, 132, 1)",
+              "rgba(54, 162, 235, 1)",
+              "rgba(255, 206, 86, 1)",
+              "rgba(75, 192, 192, 1)",
+              "rgba(153, 102, 255, 1)",
+              "rgba(255, 159, 64, 1)",
+            ],
+            borderWidth: 1,
+          },
+        ],
+      };
+
+      const sliceThickness = {
+        id: "sliceThickness",
+        beforeDraw(chart, plugins) {
+          const {
+            ctx,
+            data,
+            chartArea: { top, bottom, left, right, width, height },
+          } = chart;
+
+          ctx.save();
+          console.log(`Center: ${chart.getDatasetMeta(0).data[0].x}`);
+          console.log(
+            `InnerRadius: ${chart.getDatasetMeta(0).data[0].innerRadius}`
+          );
+          console.log(
+            `OuterRadius: ${chart.getDatasetMeta(0).data[0].outerRadius}`
+          );
+          console.log(`Width: ${width}`);
+          ctx.fillStyle = "black";
+          ctx.fillRect(
+            chart.getDatasetMeta(0).data[0].x,
+            chart.getDatasetMeta(0).data[0].y,
+            chart.getDatasetMeta(0).data[1].outerRadius,
+            10
+          );
+
+          data.datasets[0].data.forEach((thickness, index) => {
+            chart.getDatasetMeta(0).data[index].innerRadius = width / 3.5;
+            chart.getDatasetMeta(0).data[index].outerRadius =
+              width / 2.5 + thickness * 2;
+          });
+        },
+      };
+
+      const textLabel = {
+        id: "textLabel",
+        afterDatasetsDraw(chart, args, plugins) {
+          const {
+            ctx,
+            data,
+            chartArea: { top, bottom, left, right, width, height },
+          } = chart;
+
+          ctx.save();
+
+          const xCenter = chart.getDatasetMeta(0).data[0].x;
+          const yCenter = chart.getDatasetMeta(0).data[0].y;
+
+          const fontSize = width / 15;
+          ctx.font = `bold ${fontSize}px sans-serif`;
+          ctx.fillStyle = plugins.textColor || "gray";
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.fillText(data.datasets[0].label, xCenter, yCenter);
+        },
+      };
+
+      const config = {
+        type: "doughnut",
+        data: data,
+        options: {
+          plugins: {
+            textLabel: {
+              textColor: "blue",
+            },
+          },
+        },
+        plugins: [textLabel, sliceThickness],
+      };
+
+      const myChart = new Chart(document.getElementById("myChart"), config);
+    </script>
+  </body>
+</html>
