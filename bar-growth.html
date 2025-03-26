@@ -69,14 +69,12 @@
           },
           {
             label: "Arrow Bar",
-            //data: [12, 19, 3, 5, 2, 3],
             data: [
               [12, 19],
               [19, 3],
               [3, 5],
               [5, 2],
               [2, 3],
-              //[0, 3],
             ],
             backgroundColor: "rgba(0, 0, 0, 1)",
             borderColor: "rgba(0, 0, 0, 1)",
@@ -85,7 +83,6 @@
         ],
       };
 
-      // barGrowthIndicator plugin
       const barGrowthIndicator = {
         id: "barGrowthIndicator",
         afterDatasetsDraw(chart, scales, options) {
@@ -112,7 +109,6 @@
               const end = chart._metasets[1]._parsed[a]._custom.end;
 
               if (end >= start) {
-                // triangle
                 ctx.beginPath();
                 ctx.moveTo(
                   chart.getDatasetMeta(1).data[a].x,
